@@ -10,6 +10,7 @@
 		"@types/node": "^16.18.13",
 		"@types/react": "^18.0.28",
 		"@types/react-dom": "^18.0.11",
+		"openai": "^3.1.0",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-scripts": "5.0.1",
@@ -40,5 +41,5 @@
 			"last 1 safari version"
 		]
 	},
-	"proxy": "https://chat.openai.com/v1"
+	"proxy": "https://api.openai.com/v1"
 }

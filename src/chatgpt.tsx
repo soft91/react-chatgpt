@@ -1,49 +1,44 @@
 import React, { ChangeEvent, useState } from "react";
+import { Configuration, OpenAIApi } from "openai";
+
+const configuration = new Configuration({
+	apiKey: "",
+});
+
+const openai = new OpenAIApi(configuration);
 
 function ChatApp() {
 	const [message, setMessage] = useState<string>("");
 	const [response, setResponse] = useState<string>("");
+	const [option, setOption] = useState({
+		model: "text-davinci-003",
+		temperature: 0,
+		max_tokens: 100,
+		top_p: 1.0,
+		frequency_penalty: 0.0,
+		presence_penalty: 0.0,
+		stop: ["\n"],
+	});
 
 	const handleMessageChange = (event: ChangeEvent<HTMLInputElement>) => {
 		setMessage(event.target.value);
 	};
 
-	const handleSendMessage = () => {
-		fetch("/completions", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: "Bearer ",
-			},
-			body: JSON.stringify({
-				id: "cmpl-GERzeJQ4lvqPk8SkZu4XMIuR",
-				object: "text_completion",
-				created: 1586839808,
-				model: "text-davinci:003",
-				choices: [
-					{
-						text: "\n\nThis is indeed a test",
-						index: 0,
-						logprobs: null,
-						finish_reason: "length",
-					},
-				],
-				usage: {
-					prompt_tokens: 5,
-					completion_tokens: 7,
-					total_tokens: 12,
-				},
-			}),
-		})
-			.then((response) => response.json())
-			.then((data) => setResponse(data.response))
-			.catch((error) => console.error(error));
+	const doStuff = async () => {
+		let object = {
+			...option,
+			prompt: message,
+		};
+
+		const response = await openai.createCompletion(object);
+
+		setResponse(response.data.choices[0].text as string);
 	};
 
 	return (
 		<div>
 			<input type="text" value={message} onChange={handleMessageChange} />
-			<button onClick={handleSendMessage}>Send</button>
+			<button onClick={doStuff}>Send</button>
 			{response && <p>{response}</p>}
 		</div>
 	);
