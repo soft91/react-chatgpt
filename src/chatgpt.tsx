@@ -1,8 +1,9 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Configuration, OpenAIApi } from "openai";
 
 const configuration = new Configuration({
-	apiKey: "",
+	// apiKey: process.env.REACT_APP_OPENAPI_KEY,
+	apiKey: process.env.REACT_APP_OPENAPI_KEY,
 });
 
 const openai = new OpenAIApi(configuration);
@@ -13,11 +14,11 @@ function ChatApp() {
 	const [option, setOption] = useState({
 		model: "text-davinci-003",
 		temperature: 0,
-		max_tokens: 100,
+		max_tokens: 64,
 		top_p: 1.0,
 		frequency_penalty: 0.0,
 		presence_penalty: 0.0,
-		stop: ["\n"],
+		//stop: ["\n"],
 	});
 
 	const handleMessageChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -34,6 +35,10 @@ function ChatApp() {
 
 		setResponse(response.data.choices[0].text as string);
 	};
+
+	useEffect(() => {
+		console.log(configuration.apiKey);
+	}, []);
 
 	return (
 		<div>
